@@ -39,7 +39,7 @@ then
     eval $cmd_rm
 
     echo $cmd_snapshot
-    eval $cmd_snapshot >null
+    eval $cmd_snapshot
 
     err=$?
     if [ $err -eq 0 ]
