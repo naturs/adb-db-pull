@@ -6,7 +6,7 @@
 # https://github.com/leonardw/adb-db-pull.git
 
 SELF=`basename $0`
-CMD="adb-pull-dir"
+CMD="adb-pull"
 SOURCE_DIR="cache"
 
 if [ $? -ne 0 ]
