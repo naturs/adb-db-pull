@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Copyright (c) 2014 Leonard Wu <leonard.wu92@alumni.ic.ac.uk>
+# MIT License
+# Android SQLite DB Pull (adb-db-pull, v1.2)
+# https://github.com/leonardw/adb-db-pull.git
+
+SELF=`basename $0`
+CMD="adb-pull-dir"
+SOURCE_DIR="cache"
+
+if [ $? -ne 0 ]
+then
+    echo "adb runtime not found. Please install Android SDK and add into PATH"
+    exit 1
+fi;
+# Show usage info if incorrect num of args
+if [ $# -eq 0 ]
+then
+    echo "Usage: $SELF [PACKAGE.NAME]"
+    echo "eg. $SELF com.mydomain.myapp"
+fi;
+# Quit if more than max num of args
+if [ $# -gt 1 ]
+then
+    exit 1
+fi;
+
+if [ $# -eq 1 ]
+then
+    cmd_snapshot="$CMD $1 $SOURCE_DIR"
+    eval $cmd_snapshot
+fi;
+exit 0

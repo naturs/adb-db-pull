@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# Copyright (c) 2014 Leonard Wu <leonard.wu92@alumni.ic.ac.uk>
+# MIT License
+# Android SQLite DB Pull (adb-db-pull, v1.2)
+# https://github.com/leonardw/adb-db-pull.git
+
+ADB="adb"
+ADB_SHELL="$ADB shell"
+ADB_SHELL_SU="$ADB shell su -c"
+SELF=`basename $0`
+DEST_DIR="./"
+SDCARD_DEST_DIR="/sdcard/Adb-Shell"
+
+if [ $? -ne 0 ]
+then
+    echo "adb runtime not found. Please install Android SDK and add into PATH"
+    exit 1
+fi;
+
+# Quit if more than max num of args
+if [ $# -gt 2 ]
+then
+    exit 1
+fi;
+
+if [ $# -eq 1 ]
+then
+    remote_dst_app_dir="$SDCARD_DEST_DIR/$1"
+    cmd_snapshot="$ADB_SHELL_SU \"cp -a /data/data/$1/ $SDCARD_DEST_DIR\""
+
+    echo "Create remote folder: " $remote_dst_app_dir
+    cmd_mkdir="$ADB_SHELL \"mkdir -p $remote_dst_app_dir\" "
+    eval $cmd_mkdir
+
+    # 删除目标文件夹
+    echo "Delete remote folder: $remote_dst_app_dir"
+    cmd_rm="$ADB_SHELL \"rm -rf $remote_dst_app_dir\" "
+    eval $cmd_rm
+
+    echo $cmd_snapshot
+    eval $cmd_snapshot >null
+
+    err=$?
+    if [ $err -eq 0 ]
+    then
+        echo "Successed: copy from app folder."
+    else
+        echo "Failed: copy from app folder."
+        exit err
+    fi;
+
+    # 本地目标文件夹
+    local_dst_app_dir="$DEST_DIR$1/"
+    # 先创建目标文件夹
+    mkdir -p $local_dst_app_dir
+    # 删除本地目标文件夹
+    echo "Delete local folder: $local_dst_app_dir"
+    rm -rf $local_dst_app_dir
+
+    cmd_pull="$ADB pull $remote_dst_app_dir $local_dst_app_dir"
+    echo $cmd_pull
+    eval $cmd_pull
+    
+    err=$?
+    if [ $err -eq 0 ]
+    then
+        echo "Successed: ADB pull"
+    else
+        echo "Failed: ADB pull"
+        exit err
+    fi;
+fi;
+
+if [ $# -eq 2  ]
+then
+    SOURCE_DIR="$2"
+    remote_dst_app_dir="$SDCARD_DEST_DIR/$1"
+    remote_dst_app_source_dir="$remote_dst_app_dir/$SOURCE_DIR"
+    cmd_snapshot="$ADB_SHELL_SU \"cp -a /data/data/$1/$SOURCE_DIR/ $remote_dst_app_source_dir\" "
+
+    # 先创建sdcard目标文件夹
+    echo "Create remote folder: " $remote_dst_app_source_dir
+    cmd_mkdir="$ADB_SHELL \"mkdir -p $remote_dst_app_source_dir\" "
+    eval $cmd_mkdir
+
+    # 删除sdcard目标文件夹
+    echo "Delete remote folder: $remote_dst_app_source_dir"
+    cmd_rm="$ADB_SHELL \"rm -rf $remote_dst_app_source_dir\" "
+    eval $cmd_rm
+
+    echo $cmd_snapshot
+    eval $cmd_snapshot
+
+    err=$?
+    if [ $err -eq 0 ]
+    then
+        echo "Successed: copy from app folder."
+    else
+        echo "Failed: copy from app folder."
+        exit err
+    fi;
+
+    local_dst_app_source_dir="$DEST_DIR$1/$SOURCE_DIR"
+    # 先创建目标文件夹
+    mkdir -p $local_dst_app_source_dir
+    # 删除本地目标文件夹
+    echo "Delete local folder: $local_dst_app_source_dir"
+    rm -rf $local_dst_app_source_dir
+
+    cmd_pull="$ADB pull $remote_dst_app_source_dir $local_dst_app_source_dir"
+    echo $cmd_pull
+    eval $cmd_pull
+    
+    err=$?
+    if [ $err -eq 0 ]
+    then
+        echo "Successed: ADB pull"
+    else
+        echo "Failed: ADB pull"
+        exit err
+    fi;
+fi;
+exit 0

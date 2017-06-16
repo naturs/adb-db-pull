@@ -1,98 +1,72 @@
-# Android SQLite DB Pull (adb-db-pull)
+# Adb-Shell #
 
-Shell script to pull SQLite DBs on an Android (virtual) device directly to a connected computer, via ADB.
+## 描述 ##
 
-The pulled DB file may then be opened and examined using any of the SQLite tools running on the computer.
+`Adb-Shell`包含一系列命令，可用来快速拷贝`/data/data/[PACKAGE]`目录下的内容至电脑本地。
 
+注意：
 
-Features:
-* List all packages on Android device that have a SQLite database
-* List all SQLite databases on Android device under a given package name
-* Copy a specified SQLite DB file from Android device to current local directory on computer
+1. **手机需要root**；
+2. **目前只支持拷贝文件夹，不支持单个文件**；
 
+## 安装 ##
 
-Prerequisites:
+执行以下命令：
 
-* A computer runing *nix (Linux, Mac OSX, etc)
-* ADB (part of Android SDK) must be installed on computer
-* Connected Android device may be a virtual device (ADT Virtual Device, Genymotion, etc) or a _rooted_ physical device.
-* Only one Android device may be connected; multiple connected devices may fail with unkown errors
+	git clone git@github.com:naturs/adb-shell.git
+	cd adb-shell
+	sudo cp ./adb-pull /usr/local/bin/
+	sudo cp ./adb-pull-databases /usr/local/bin/
+	sudo cp ./adb-pull-sharedpreferences /usr/local/bin/
+	sudo cp ./adb-pull-files /usr/local/bin/
+	sudo cp ./adb-pull-cache /usr/local/bin/
+	sudo cp ./adb-pull-all /usr/local/bin/
+	sudo chmod +x /usr/local/bin/adb-pull
+	sudo chmod +x /usr/local/bin/adb-pull-databases
+	sudo chmod +x /usr/local/bin/adb-pull-sharedpreferences
+	sudo chmod +x /usr/local/bin/adb-pull-files
+	sudo chmod +x /usr/local/bin/adb-pull-cache
+	sudo chmod +x /usr/local/bin/adb-pull-all
 
+## 使用 ##
 
-## Installation
+导出`databases`目录：
 
-Copy the shell script into a directory on your PATH, e.g., `/usr/local/bin`
+	adb-pull-databases [YOUR_PACKAGE]
 
-```sh
-$ git clone https://github.com/leonardw/adb-db-pull.git
-$ cd adb-db-pull
-$ cp ./adb-db-pull.sh /usr/local/bin/
-$ chmod +x /usr/local/bin/adb-db-pull.sh
-``` 
+导出`shared_prefs`目录：
 
-## Usage
+	adb-pull-sharedpreferences [YOUR_PACKAGE]
 
-```sh
-$ adb-db-pull.sh [PACKAGE.NAME [DB_FILE]]
-```
+导出`files`目录：
 
+	adb-pull-files [YOUR_PACKAGE]
 
-## Example
+导出`cache`目录：
 
-List all packages that have a SQLite database, on a running Android device connected via ADB
-```sh
-$ adb-db-pull.sh
-Packages with SQLite DBs found on device:
-com.android.deskclock
-com.android.email
-com.android.inputmethod.latin
-com.android.keychain
-com.android.launcher
-com.android.providers.calendar
-com.android.providers.contacts
-com.android.providers.downloads
-com.android.providers.media
-com.android.providers.settings
-com.android.providers.telephony
-com.android.providers.userdictionary
-com.mydomain.myapp
-```
+	adb-pull-cache [YOUR_PACKAGE]
 
+导出`/data/data/[YOUR_PACKAGE]`整个目录：
 
-List all SQLite databases under a specified package, on a running Android device connected via ADB
-```sh
-$ adb-db-pull.sh com.mydomain.myapp
-SQLite DBs found under com.mydomain.myapp on device:
-names.db
-names.db-journal
-profile.db
-profile.db-journal
-```
+	adb-pull-all [YOUR_PACKAGE]
 
+导出指定目录：
 
-Copy a specified SQLite DB file to current local directory, from a running Android device connected via ADB
-```sh
-$ adb-db-pull.sh com.mydomain.myapp names.db
-Done: snapshot
-7219 KB/s (45056 bytes in 0.006s)
-Done: ADB pull
+	adb-pull [YOUR_PACKAGE] databases            # 等同于adb-pull-databases [YOUR_PACKAGE]
+	adb-pull [YOUR_PACKAGE] [folder1]/[folder2]  # 注意是[YOUR_PACKAGE]目录下的文件夹
 
-$ ls -al
-total 112
-drwxr-xr-x   7 me  staff    238 22 Jun 10:00 .
-drwxr-xr-x   3 me  staff    102 22 Jun 10:00 ..
--rw-r--r--   1 me  staff  45056 22 Jun 10:00 names.db
-```
+## License ##
 
+	Copyright 2017 naturs
 
-##License
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
 
-(The MIT License)
+	http://www.apache.org/licenses/LICENSE-2.0
 
-Copyright (c) 2014 Leonard Wu <leonard.wu92@alumni.ic.ac.uk>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
