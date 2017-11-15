@@ -1,8 +1,8 @@
-# Adb-Shell #
+# Adb-Pull #
 
 ## 描述 ##
 
-`Adb-Shell`包含一系列命令，可用来快速拷贝`/data/data/[PACKAGE]`目录下的内容至电脑本地。
+`Adb-Pull`包含一系列命令，可用来快速拷贝`/data/data/[PACKAGE]`目录下的内容至电脑本地。
 
 注意：
 
@@ -14,13 +14,15 @@
 执行以下命令：
 
 	git clone git@github.com:naturs/adb-shell.git
-	cd adb-shell
+	cd adb-shell/pull
+
 	sudo cp ./adb-pull /usr/local/bin/
 	sudo cp ./adb-pull-databases /usr/local/bin/
 	sudo cp ./adb-pull-sharedpreferences /usr/local/bin/
 	sudo cp ./adb-pull-files /usr/local/bin/
 	sudo cp ./adb-pull-cache /usr/local/bin/
 	sudo cp ./adb-pull-all /usr/local/bin/
+	
 	sudo chmod +x /usr/local/bin/adb-pull
 	sudo chmod +x /usr/local/bin/adb-pull-databases
 	sudo chmod +x /usr/local/bin/adb-pull-sharedpreferences
